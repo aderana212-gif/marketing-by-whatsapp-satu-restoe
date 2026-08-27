@@ -1,19 +1,18 @@
-# Marketing by WhatsApp — Satu Restoe
+# Marketing By WhatsApp — Satu Restoe
 
-Aplikasi marketing untuk database travel/customer, pesan marketing, follow-up, dan pembukaan chat WhatsApp.
+Aplikasi Android untuk marketing travel/customer Satu Restoe Pangandaran.
 
-## Database awal
+## Fitur
+- Database awal 166 calon customer.
+- Tambah dan edit customer.
+- Pencarian dan filter provinsi, prioritas, dan status.
+- Pesan marketing bisa diubah langsung.
+- Tombol **WA Business** mencoba membuka WhatsApp Business langsung ke nomor customer terpilih dengan pesan yang sudah diisi.
+- Tombol Chrome dan Copy Link sebagai cadangan.
+- Status dan data tambahan disimpan lokal di HP.
+- Export CSV.
 
-Master database berisi 166 calon customer travel yang sudah digabung dan dibersihkan dari data yang tersedia. Data dapat ditambah dan status customer dapat diperbarui.
+## Android
+Package: `com.saturestoe.marketing`
 
-## Target aplikasi
-
-- Database customer/travel
-- Prioritas A/B
-- Status: Belum dihubungi, Sudah dihubungi, Follow Up, Respon/Deal
-- Pesan marketing yang dapat diedit langsung
-- Tombol buka WhatsApp dengan nomor customer terpilih
-- Copy pesan
-- Catatan customer
-- Export CSV
-- Siap dikembangkan menjadi aplikasi Android
+APK debug dibangun otomatis melalui GitHub Actions setelah source project lengkap.
