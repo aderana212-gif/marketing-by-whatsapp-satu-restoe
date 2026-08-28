@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fix mobile layout and enable V3 AI
+      - name: Polish mobile layout and V3 branding
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -26,7 +26,7 @@ jobs:
           html,body{width:100%;max-width:100%;overflow-x:hidden}
           @media(max-width:800px){
             .wrap{width:100%;max-width:100%;padding:12px}
-            .card{width:100%;max-width:100%;padding:14px}
+            .card{width:100%;max-width:100%;padding:14px;overflow:hidden}
             .grid{grid-template-columns:1fr;min-width:0}
             .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
             .row button{width:100%;min-width:0;margin:0;padding:11px 8px;}
@@ -34,9 +34,13 @@ jobs:
             table{min-width:620px}
             input,select,textarea{max-width:100%;min-width:0}
             textarea{overflow-x:hidden;white-space:pre-wrap;word-break:break-word}
+            .notice,.history{overflow-wrap:anywhere;word-break:break-word}
           }
           </style>'''
           s = s.replace('</head>', css + '</head>', 1)
+          s = s.replace('Marketing By WhatsApp — Satu Restoe V2', 'Marketing By WhatsApp — Satu Restoe V3')
+          s = s.replace('WhatsApp Business • Follow-up V2', 'WhatsApp Business • AI Marketing Assistant V3')
+          s = s.replace('Satu_Restoe_Customer_V2.csv', 'Satu_Restoe_Customer_V3.csv')
           s = s.replace('</body>', '<script src="ai.js"></script></body>', 1)
           p.write_text(s, encoding='utf-8')
           PY
