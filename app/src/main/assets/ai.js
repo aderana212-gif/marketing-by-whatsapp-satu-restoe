@@ -14,6 +14,36 @@
     }catch(e){}
     return [];
   }
+  function renderAnalysis(){
+    const summary=q('aiSummary'), result=q('aiResult');
+    if(!summary||!result) return;
+    const data=getData();
+    if(!data.length){
+      summary.innerHTML='<b>🤖 AI:</b> Data customer belum tersedia di memori aplikasi.';
+      result.innerHTML='Tambahkan customer atau pastikan database 166 calon customer sudah termuat.';
+      return;
+    }
+    const norm=s=>String(s??'').trim().toLowerCase();
+    const fresh=data.filter(x=>norm(x.status)==='belum dihubungi'||!x.status);
+    const fu=data.filter(x=>norm(x.status)==='follow up');
+    const resp=data.filter(x=>norm(x.status)==='respon');
+    const deals=data.filter(x=>norm(x.status)==='deal');
+    const high=fresh.filter(x=>String(x.prio??'').trim().toUpperCase()==='A');
+    summary.innerHTML='<b>🤖 Rekomendasi AI:</b> '+high.length+' customer prioritas A belum dihubungi. Saya sarankan mulai dari mereka.';
+    result.innerHTML='<b>📊 Ringkasan:</b><br>Total '+data.length+' • Belum dihubungi '+fresh.length+' • Follow Up '+fu.length+' • Respon '+resp.length+' • Deal '+deals.length+'<br><br><b>🔥 Prioritas berikutnya:</b><br>'+
+      (high.length?high.slice(0,10).map((x,i)=>(i+1)+'. '+esc(x.name)+' — '+esc(x.city||'-')+(x.phone?' — '+esc(x.phone):'')).join('<br>'):'Tidak ada customer prioritas A yang belum dihubungi.')+
+      (high.length>10?'<br>... dan '+(high.length-10)+' lainnya':'');
+  }
+  function renderFollowups(){
+    const summary=q('aiSummary'), result=q('aiResult');
+    if(!summary||!result) return;
+    const data=getData(), norm=s=>String(s??'').trim().toLowerCase();
+    const list=data.filter(x=>norm(x.status)==='follow up').sort((a,b)=>String(a.nextFollow||'').localeCompare(String(b.nextFollow||'')));
+    summary.innerHTML='<b>🤖 Prioritas Follow-up:</b> '+list.length+' customer sedang berstatus Follow Up.';
+    result.innerHTML=list.length?list.slice(0,12).map((x,i)=>(i+1)+'. <b>'+esc(x.name)+'</b> — '+esc(x.city||'-')+' — jadwal: '+esc(x.nextFollow||'belum diatur')).join('<br>'):'Belum ada customer yang dijadwalkan Follow Up.';
+  }
+  window.aiAnalyze=renderAnalysis;
+  window.aiFollowups=renderFollowups;
   function inject(){
     if(q('aiCard')) return;
     const card=document.createElement('section'); card.className='card'; card.id='aiCard';
@@ -29,28 +59,22 @@
       .ai-title{font-size:18px;font-weight:800;margin:0}
       .ai-caption{font-size:12px;color:#667085;margin-top:3px}
       .ai-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-      .ai-actions button{width:100%;margin:0}
+      .ai-actions button{width:100%;margin:0;cursor:pointer;touch-action:manipulation}
       .ai-bubble{background:#edf7ee;padding:10px 12px;border-left:4px solid #28a745;border-radius:9px;font-size:13px;margin:8px 0}
       @media(max-width:500px){.ai-robot{width:64px;height:64px;flex-basis:64px}.ai-title{font-size:17px}}
     </style>
     <div class="ai-head"><div class="ai-robot"><div class="ai-face"></div><div class="ai-body"></div></div><div><div class="ai-title">AI Marketing Assistant V3</div><div class="ai-caption">Teman marketing Satu Restoe</div></div></div>
     <div id="aiSummary" class="ai-bubble">🤖 Halo Sob! Saya siap menganalisis database customer.</div>
-    <div class="ai-actions"><button class="blue" onclick="aiAnalyze()">🔎 Analisis Customer</button><button class="gray" onclick="aiFollowups()">📅 Prioritas Follow-up</button></div>
-    <div id="aiResult" class="history"><span class="muted">Tekan Analisis Customer untuk melihat rekomendasi.</span></div>`;
-    const main=document.querySelector('main.wrap'); if(main) main.insertBefore(card,main.firstElementChild.nextElementSibling);
+    <div class="ai-actions"><button id="aiAnalyzeBtn" class="blue">🔎 Analisis Customer</button><button id="aiFollowBtn" class="gray">📅 Prioritas Follow-up</button></div>
+    <div id="aiResult" class="history"><span class="muted">AI sedang menyiapkan analisis...</span></div>`;
+    const main=document.querySelector('main.wrap');
+    if(main) main.insertBefore(card,main.firstElementChild.nextElementSibling);
+    const analyzeBtn=q('aiAnalyzeBtn'), followBtn=q('aiFollowBtn');
+    if(analyzeBtn) analyzeBtn.addEventListener('click',renderAnalysis);
+    if(followBtn) followBtn.addEventListener('click',renderFollowups);
+    // Run once automatically so the AI result is visible immediately on first load.
+    setTimeout(renderAnalysis,100);
   }
-  window.aiAnalyze=function(){
-    const data=getData();
-    if(!data.length){q('aiSummary').textContent='🤖 Data customer belum tersedia.';return}
-    const total=data.length, fresh=data.filter(x=>x.status==='Belum dihubungi'), fu=data.filter(x=>x.status==='Follow Up'), resp=data.filter(x=>x.status==='Respon'), deals=data.filter(x=>x.status==='Deal'), high=fresh.filter(x=>x.prio==='A');
-    q('aiSummary').innerHTML='<b>🤖 Rekomendasi AI:</b> '+high.length+' customer prioritas A belum dihubungi. Saya sarankan mulai dari mereka.';
-    q('aiResult').innerHTML='<b>📊 Ringkasan:</b><br>Total '+total+' • Belum dihubungi '+fresh.length+' • Follow Up '+fu.length+' • Respon '+resp.length+' • Deal '+deals.length+'<br><br><b>🔥 Prioritas berikutnya:</b><br>'+high.slice(0,10).map((x,i)=>(i+1)+'. '+esc(x.name)+' — '+esc(x.city||'-')).join('<br>')+(high.length>10?'<br>... dan '+(high.length-10)+' lainnya':'');
-  };
-  window.aiFollowups=function(){
-    const data=getData();
-    const list=data.filter(x=>x.status==='Follow Up').sort((a,b)=>String(a.nextFollow||'').localeCompare(String(b.nextFollow||'')));
-    q('aiSummary').innerHTML='<b>🤖 Prioritas Follow-up:</b> '+list.length+' customer sedang berstatus Follow Up.';
-    q('aiResult').innerHTML=list.length?list.slice(0,12).map((x,i)=>(i+1)+'. <b>'+esc(x.name)+'</b> — '+esc(x.city||'-')+' — jadwal: '+esc(x.nextFollow||'belum diatur')).join('<br>'):'Belum ada customer yang dijadwalkan Follow Up.';
-  };
-  window.addEventListener('load',inject);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',inject);
+  else inject();
 })();
