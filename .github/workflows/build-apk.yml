@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fix mobile layout
+      - name: Fix mobile layout and enable V3 AI
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -37,6 +37,7 @@ jobs:
           }
           </style>'''
           s = s.replace('</head>', css + '</head>', 1)
+          s = s.replace('</body>', '<script src="ai.js"></script></body>', 1)
           p.write_text(s, encoding='utf-8')
           PY
 
@@ -60,6 +61,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Marketing-By-WhatsApp-Satu-Restoe-debug
+          name: Marketing-By-WhatsApp-Satu-Restoe-V3-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
