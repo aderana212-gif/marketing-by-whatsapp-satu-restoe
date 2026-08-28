@@ -40,11 +40,26 @@ public class MainActivity extends Activity {
 
     private void openWhatsAppBusiness(String webUrl) {
         try {
-            // Keep the exact selected customer's phone and prefilled message.
-            // Use the official HTTPS WhatsApp link as the URI, but explicitly
-            // target the WhatsApp Business Android package.
-            Uri target = Uri.parse(webUrl);
-            Intent intent = new Intent(Intent.ACTION_VIEW, target);
+            Uri source = Uri.parse(webUrl);
+            String phone = source.getPath();
+            String text = source.getQueryParameter("text");
+
+            if (phone != null) {
+                phone = phone.replaceAll("[^0-9]", "");
+            }
+
+            // Open the native WhatsApp Business composer directly. This avoids
+            // the wa.me web redirect behavior that can leave the message only
+            // in WhatsApp's Draft list instead of the selected chat composer.
+            Uri.Builder builder = Uri.parse("whatsapp://send").buildUpon();
+            if (phone != null && !phone.isEmpty()) {
+                builder.appendQueryParameter("phone", phone);
+            }
+            if (text != null && !text.isEmpty()) {
+                builder.appendQueryParameter("text", text);
+            }
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
             intent.setPackage("com.whatsapp.w4b");
             startActivity(intent);
         } catch (Exception e) {
