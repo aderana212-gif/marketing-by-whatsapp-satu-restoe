@@ -1,0 +1,41 @@
+name: Add More Tour Travel Contacts
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  add-contacts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Append tour travel contacts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('app/src/main/assets/data.js')
+          s=p.read_text()
+          marker='~A|0|0|Tactical Tour & Travel Bandung|0877-8181-8144'
+          if marker not in s:
+              additions=(
+                '~A|0|0|Tactical Tour & Travel Bandung|0877-8181-8144'
+                '~A|0|0|Bandung Tour & Travel Hemat|0856-5978-6865'
+                '~A|0|11|Nissa Trans Tour & Travel|0811-2233-708'
+                '~A|1|36|Mbarep Tour & Travel|0812-6767-2003'
+              )
+              s=s.replace('`;\nconst SEED=', additions+'`;\nconst SEED=', 1)
+              p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/src/main/assets/data.js
+          git diff --cached --quiet || git commit -m 'Add more tour and travel contacts'
+          git push
+      - name: Remove temporary workflow
+        run: |
+          git rm .github/workflows/add-tour-contacts-2.yml
+          git commit -m 'Remove temporary tour contact workflow'
+          git push
