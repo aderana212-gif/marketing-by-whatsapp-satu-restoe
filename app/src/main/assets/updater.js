@@ -1,7 +1,8 @@
 // Satu Restoe — remote database updater
-// Pulls verified additions from GitHub and merges only new phone numbers.
+// Fetches the latest public category_data.js from GitHub and merges new phone numbers
+// into the existing local database without removing local status/history/notes.
 (function(){
-  const REMOTE='https://raw.githubusercontent.com/aderana212-gif/marketing-by-whatsapp-satu-restoe/main/app/src/main/assets/remote_updates.json';
+  const REMOTE='https://raw.githubusercontent.com/aderana212-gif/marketing-by-whatsapp-satu-restoe/main/app/src/main/assets/category_data.js';
   const KEY='satu_restoe_marketing_v4';
   const norm=p=>String(p||'').replace(/\D/g,'').replace(/^0/,'62');
   function button(){
@@ -19,7 +20,10 @@
     try{
       const r=await fetch(REMOTE+'?t='+Date.now(),{cache:'no-store'});
       if(!r.ok) throw new Error('HTTP '+r.status);
-      const remote=await r.json();
+      const text=await r.text();
+      const m=text.match(/const\\s+CATEGORY_DATA\\s*=\\s*([\\s\\S]*);\\s*$/);
+      if(!m) throw new Error('Format database tidak dikenali');
+      const remote=Function('return ('+m[1]+')')();
       const local=JSON.parse(localStorage.getItem(KEY)||'[]');
       if(!Array.isArray(local)) throw new Error('Database lokal tidak valid');
       const seen=new Set(local.map(x=>norm(x.phone)).filter(Boolean));
