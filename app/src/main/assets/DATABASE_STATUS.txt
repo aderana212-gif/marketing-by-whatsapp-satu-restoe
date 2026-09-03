@@ -1,0 +1,26 @@
+SATU RESTOE — DATABASE STATUS
+
+MASTER SEED TRAVEL
+- Existing Travel seed: retained in data.js
+- Additional categorized records are deduplicated against the additional master list.
+
+ADDITIONAL CLEANED RECORDS
+- Tour & Travel: 16
+- PO Bus / Pariwisata: 27
+- EO / MICE / Outbound: 28
+- Corporate / Instansi: 29
+- Wedding / WO: 26
+
+TOTAL ADDITIONAL CLEANED RECORDS: 126
+
+CLEANING RULES
+1. One normalized WhatsApp number counts once within the cleaned additions.
+2. Entries with blank phone numbers are excluded.
+3. Weak/truncated contacts from the research list are excluded.
+4. Duplicate business numbers are not repeated across categories.
+5. Existing Travel seed remains the base database.
+6. Pangandaran is retained only where relevant to Wedding/WO; the broader prospecting list targets outside Pangandaran.
+7. Public business contacts only; outreach should remain personal, relevant, gradual, and consent-aware.
+
+NOTE
+The app's five UI category keys are travel, bus, eo, corp, wedding. The source category database uses corporate for the Corporate section and should be mapped to corp when loaded by the UI.
