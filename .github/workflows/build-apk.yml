@@ -32,6 +32,16 @@ jobs:
       - name: Generate Gradle wrapper
         run: gradle wrapper --gradle-version 8.7 --distribution-type bin
 
+      - name: Fix mobile database card alignment
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('app/src/main/assets/index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('.cats{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}', '.cats{grid-template-columns:repeat(3,1fr)}.cat{min-height:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.stats{grid-template-columns:1fr 1fr}')
+          p.write_text(s, encoding='utf-8')
+          PY
+
       - name: Build release-named debug APK
         run: ./gradlew :app:assembleDebug --stacktrace
 
