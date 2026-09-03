@@ -17,7 +17,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         web = new WebView(this);
         setContentView(web);
-
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
@@ -25,16 +24,14 @@ public class MainActivity extends Activity {
         s.setAllowContentAccess(true);
 
         web.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("https://wa.me/")) {
+            @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url != null && url.startsWith("https://wa.me/")) {
                     openWhatsAppBusiness(url);
                     return true;
                 }
                 return false;
             }
         });
-
         web.loadUrl("file:///android_asset/index.html");
     }
 
@@ -43,29 +40,17 @@ public class MainActivity extends Activity {
             Uri source = Uri.parse(webUrl);
             String phone = source.getPath();
             String text = source.getQueryParameter("text");
+            if (phone != null) phone = phone.replaceAll("[^0-9]", "");
 
-            if (phone != null) {
-                phone = phone.replaceAll("[^0-9]", "");
-            }
+            Uri.Builder b = Uri.parse("whatsapp://send").buildUpon();
+            if (phone != null && !phone.isEmpty()) b.appendQueryParameter("phone", phone);
+            if (text != null && !text.isEmpty()) b.appendQueryParameter("text", text);
 
-            // Open the native WhatsApp Business composer directly. This avoids
-            // the wa.me web redirect behavior that can leave the message only
-            // in WhatsApp's Draft list instead of the selected chat composer.
-            Uri.Builder builder = Uri.parse("whatsapp://send").buildUpon();
-            if (phone != null && !phone.isEmpty()) {
-                builder.appendQueryParameter("phone", phone);
-            }
-            if (text != null && !text.isEmpty()) {
-                builder.appendQueryParameter("text", text);
-            }
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+            Intent intent = new Intent(Intent.ACTION_VIEW, b.build());
             intent.setPackage("com.whatsapp.w4b");
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this,
-                    "WhatsApp Business belum tersedia atau belum diizinkan.",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "WhatsApp Business belum terpasang atau tidak dapat dibuka.", Toast.LENGTH_LONG).show();
         }
     }
 }
