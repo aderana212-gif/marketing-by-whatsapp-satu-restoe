@@ -54,15 +54,15 @@ jobs:
       - name: Verify and rename APK
         run: |
           test -f app/build/outputs/apk/debug/app-debug.apk
-          cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.1.apk
-          ls -lh app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.1.apk
+          cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.3.apk
+          ls -lh app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.3.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: SatuRestoe_Marketing_WA_v1.2.1
-          path: app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.1.apk
+          name: SatuRestoe_Marketing_WA_v1.3
+          path: app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.3.apk
           if-no-files-found: error
           retention-days: 30
 
-# Rebuild after database updater preservation fix.
+# v1.3: one-time install adds remote WhatsApp template updates.
