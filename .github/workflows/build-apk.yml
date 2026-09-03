@@ -54,15 +54,15 @@ jobs:
       - name: Verify and rename APK
         run: |
           test -f app/build/outputs/apk/debug/app-debug.apk
-          cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.apk
-          ls -lh app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.apk
+          cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.1.apk
+          ls -lh app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.1.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: SatuRestoe_Marketing_WA_v1.2
-          path: app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.apk
+          name: SatuRestoe_Marketing_WA_v1.2.1
+          path: app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.2.1.apk
           if-no-files-found: error
           retention-days: 30
 
-# Rebuild trigger for the mobile responsive layout, prospect data, and remote updater.
+# Rebuild after database updater preservation fix.
