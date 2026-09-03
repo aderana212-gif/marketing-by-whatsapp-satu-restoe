@@ -43,6 +43,9 @@ jobs:
           p.write_text(s, encoding='utf-8')
           PY
 
+      - name: Add verified prospect data batch 2
+        run: cat app/src/main/assets/category_data_extra.js >> app/src/main/assets/category_data.js
+
       - name: Build release-named debug APK
         run: ./gradlew :app:assembleDebug --stacktrace
 
@@ -60,4 +63,4 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-# Rebuild trigger for the mobile responsive layout fix.
+# Rebuild trigger for the mobile responsive layout fix and prospect data.
