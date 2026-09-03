@@ -15,48 +15,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Fix mobile layout
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('app/src/main/assets/index.html')
-          s = p.read_text(encoding='utf-8')
-          css = '''<style id="mobile-layout-fix">
-          html,body{width:100%;max-width:100%;overflow-x:hidden}
-          @media(max-width:800px){
-            .wrap{width:100%;max-width:100%;padding:12px}
-            .card{width:100%;max-width:100%;padding:14px}
-            .grid{grid-template-columns:1fr;min-width:0}
-            .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
-            .row button{width:100%;min-width:0;margin:0;padding:11px 8px;}
-            .table{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-            table{min-width:620px}
-            input,select,textarea{max-width:100%;min-width:0}
-            textarea{overflow-x:hidden;white-space:pre-wrap;word-break:break-word}
-          }
-          </style>'''
-          s = s.replace('</head>', css + '</head>', 1)
-          p.write_text(s, encoding='utf-8')
-          PY
-
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
-
       - name: Create Gradle wrapper
         run: gradle wrapper --gradle-version 8.7
-
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
