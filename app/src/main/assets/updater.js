@@ -21,7 +21,7 @@
       const r=await fetch(REMOTE+'?t='+Date.now(),{cache:'no-store'});
       if(!r.ok) throw new Error('HTTP '+r.status);
       const text=await r.text();
-      const m=text.match(/const\\s+CATEGORY_DATA\\s*=\\s*([\\s\\S]*);\\s*$/);
+      const m=text.match(/const\s+CATEGORY_DATA\s*=\s*([\s\S]*);\s*$/);
       if(!m) throw new Error('Format database tidak dikenali');
       const remote=Function('return ('+m[1]+')')();
       const local=JSON.parse(localStorage.getItem(KEY)||'[]');
