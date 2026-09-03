@@ -58,3 +58,5 @@ jobs:
           path: app/build/outputs/apk/debug/SatuRestoe_Marketing_WA_v1.1.apk
           if-no-files-found: error
           retention-days: 30
+
+# Rebuild trigger for the mobile UI alignment update.
