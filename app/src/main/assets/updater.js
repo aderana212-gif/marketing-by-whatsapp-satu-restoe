@@ -1,7 +1,7 @@
 // Satu Restoe — live Supabase database + WA template updater
 (function(){
   const SUPABASE_URL='https://xgidnneeovsqfysleeua.supabase.co';
-  const SUPABASE_KEY='sb_publishable_bcLO52pj7tmWEHBPxziSH_ElYtHWM0';
+  const SUPABASE_KEY='sb_publishable_bcLO52pj7tmWEHBPxziSHw_ElYtHWM0';
   const SEED_URL=SUPABASE_URL+'/functions/v1/seed-marketing-data';
   const REMOTE='https://raw.githubusercontent.com/aderana212-gif/marketing-by-whatsapp-satu-restoe/main/app/src/main/assets/category_data.js';
   const TEMPLATE_REMOTE='https://raw.githubusercontent.com/aderana212-gif/marketing-by-whatsapp-satu-restoe/main/app/src/main/assets/templates.js';
