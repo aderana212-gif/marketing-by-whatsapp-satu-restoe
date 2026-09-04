@@ -1,50 +1,23 @@
-// Satu Restoe — remote database + WA template updater
+// Satu Restoe — live Supabase database + WA template updater
 (function(){
+  const SUPABASE_URL='https://xgidnneeovsqfysleeua.supabase.co';
+  const SUPABASE_KEY='sb_publishable_bcLO52pj7tmWEHBPxziSHw_ElYtHWM0';
   const REMOTE='https://raw.githubusercontent.com/aderana212-gif/marketing-by-whatsapp-satu-restoe/main/app/src/main/assets/category_data.js';
   const TEMPLATE_REMOTE='https://raw.githubusercontent.com/aderana212-gif/marketing-by-whatsapp-satu-restoe/main/app/src/main/assets/templates.js';
   const KEY='satu_restoe_marketing_v4';
   const LEGACY_KEYS=['satu_restoe_marketing_v3','satu_restoe_marketing_v2'];
   const TEMPLATE_KEY='satu_restoe_templates_v1';
   const norm=p=>String(p||'').replace(/\D/g,'').replace(/^0/,'62');
-  function button(){
-    if(document.getElementById('updateDbBtn')) return;
-    const b=document.createElement('button'); b.id='updateDbBtn'; b.className='blue'; b.textContent='🔄 Update Database';
-    b.style.cssText='width:100%;margin:8px 0;padding:12px;font-size:15px'; b.onclick=update;
-    const target=document.querySelector('#dbTitle')?.parentElement; if(target) target.insertBefore(b,target.children[2]||null);
-  }
-  function mergeInto(base,incoming){const seen=new Set(base.map(x=>norm(x.phone)).filter(Boolean));let added=0;(incoming||[]).forEach(x=>{const phone=norm(x.phone);if(!phone||seen.has(phone))return;seen.add(phone);base.push(x);added++});return added;}
-  function applyTemplates(t){
-    if(!t||typeof t!=='object')return;
-    localStorage.setItem(TEMPLATE_KEY,JSON.stringify(t));
-    const get=k=>t[k]||null;
-    const put=()=>{const k=document.getElementById('category')?.value||'travel';const v=get(k);const m=document.getElementById('message');if(v&&m)m.value=v;};
-    put();
-    if(!window.__remoteTemplateListeners){
-      window.__remoteTemplateListeners=true;
-      document.addEventListener('click',e=>{
-        const el=e.target?.closest?.('button');
-        if(el && (/Tambah Customer/i.test(el.textContent||'') || el.classList.contains('cat'))) setTimeout(put,80);
-      },true);
-      document.addEventListener('change',e=>{if(e.target?.id==='category')setTimeout(put,30)},true);
-    }
-  }
-  async function fetchTemplates(){
-    try{const r=await fetch(TEMPLATE_REMOTE+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const text=await r.text();const m=text.match(/const\s+REMOTE_TEMPLATES\s*=\s*([\s\S]*);\s*$/);if(!m)throw new Error('Format template tidak dikenali');const t=Function('return ('+m[1]+')')();applyTemplates(t);return true;}
-    catch(e){try{const old=JSON.parse(localStorage.getItem(TEMPLATE_KEY)||'null');if(old)applyTemplates(old)}catch(_){}return false;}
-  }
-  async function update(){
-    const b=document.getElementById('updateDbBtn');if(b){b.disabled=true;b.textContent='⏳ Memulihkan & mengambil data...';}
-    try{
-      let local=[];try{const cur=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(cur))local=cur}catch(e){}
-      let restored=0;for(const k of LEGACY_KEYS){try{const old=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(old))restored+=mergeInto(local,old)}catch(e){}}
-      if(typeof seed==='function')restored+=mergeInto(local,seed());
-      const r=await fetch(REMOTE+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const text=await r.text();const m=text.match(/const\s+CATEGORY_DATA\s*=\s*([\s\S]*);\s*$/);if(!m)throw new Error('Format database tidak dikenali');
-      const remote=Function('return ('+m[1]+')')();const rows=[];Object.keys(remote||{}).forEach(cat=>(remote[cat]||[]).forEach(x=>{const city=x[1]||'';const jateng=/Tegal|Wonosobo|Banyumas|Purwokerto|Cilacap|Kebumen|Magelang|Pekalongan|Pemalang/.test(city);rows.push({prio:x[3]||'B',prov:jateng?'Jawa Tengah':'Jawa Barat',city:city,name:x[0],phone:x[2],category:cat,status:'Belum dihubungi',notes:'',marketing:'',lastContact:'',nextFollow:'',history:[]})}));
-      const added=mergeInto(local,rows);localStorage.setItem(KEY,JSON.stringify(local));if(typeof data!=='undefined')data=local;
-      const templatesUpdated=await fetchTemplates();if(typeof renderCats==='function')renderCats();if(typeof render==='function')render();
-      setTimeout(()=>{try{const t=JSON.parse(localStorage.getItem(TEMPLATE_KEY)||'null');if(t)applyTemplates(t)}catch(e){}},120);
-      alert('Update berhasil. '+(restored+added)+' data dipulihkan/ditambahkan. Total '+local.length+' customer.'+(templatesUpdated?' Template WA juga diperbarui.':''));
-    }catch(e){alert('Update gagal: '+e.message)}finally{if(b){b.disabled=false;b.textContent='🔄 Update Database'}}
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{button();fetchTemplates()});else{button();fetchTemplates()}
+  const headers={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
+  function button(){if(document.getElementById('updateDbBtn'))return;const b=document.createElement('button');b.id='updateDbBtn';b.className='blue';b.textContent='🔄 Update Database';b.style.cssText='width:100%;margin:8px 0;padding:12px;font-size:15px';b.onclick=update;const target=document.querySelector('#dbTitle')?.parentElement;if(target)target.insertBefore(b,target.children[2]||null)}
+  function localData(){try{const cur=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(cur)?cur:[]}catch(e){return []}}
+  function mergeLegacy(base){const seen=new Set(base.map(x=>norm(x.phone)).filter(Boolean));for(const k of LEGACY_KEYS){try{const old=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(old))old.forEach(x=>{const p=norm(x.phone);if(p&&!seen.has(p)){seen.add(p);base.push(x)}})}catch(e){}}if(typeof seed==='function'){try{seed().forEach(x=>{const p=norm(x.phone);if(p&&!seen.has(p)){seen.add(p);base.push(x)}})}catch(e){}}return base}
+  async function supabaseContacts(){const url=SUPABASE_URL+'/rest/v1/marketing_contacts?select=id,name,city,phone,category,grade,active,notes,updated_at&active=eq.true&order=id.asc';const r=await fetch(url,{headers,cache:'no-store'});if(!r.ok)throw new Error('Supabase contacts HTTP '+r.status);return await r.json()}
+  async function supabaseTemplates(){const url=SUPABASE_URL+'/rest/v1/marketing_templates?select=category,template,active,updated_at&active=eq.true';const r=await fetch(url,{headers,cache:'no-store'});if(!r.ok)throw new Error('Supabase templates HTTP '+r.status);return await r.json()}
+  function applyTemplates(t){if(!t||typeof t!=='object')return;localStorage.setItem(TEMPLATE_KEY,JSON.stringify(t));const put=()=>{const k=document.getElementById('category')?.value||'travel';const v=t[k];const m=document.getElementById('message');if(v&&m)m.value=v};put();if(!window.__remoteTemplateListeners){window.__remoteTemplateListeners=true;document.addEventListener('click',e=>{const el=e.target?.closest?.('button');if(el&&(/Tambah Customer/i.test(el.textContent||'')||el.classList.contains('cat')))setTimeout(put,80)},true);document.addEventListener('change',e=>{if(e.target?.id==='category')setTimeout(put,30)},true)}}
+  async function fetchTemplates(){try{const rows=await supabaseTemplates();if(rows.length){const t={};rows.forEach(x=>t[x.category]=x.template);applyTemplates(t);return true}}catch(e){}try{const r=await fetch(TEMPLATE_REMOTE+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const text=await r.text();const m=text.match(/const\s+REMOTE_TEMPLATES\s*=\s*([\s\S]*);\s*$/);if(!m)throw new Error('Format template tidak dikenali');applyTemplates(Function('return ('+m[1]+')')());return true}catch(e){try{const old=JSON.parse(localStorage.getItem(TEMPLATE_KEY)||'null');if(old)applyTemplates(old)}catch(_){}return false}}
+  function normalizeRemote(rows,old){const byPhone=new Map((old||[]).map(x=>[norm(x.phone),x]));const out=[];const seen=new Set();(rows||[]).forEach(r=>{const p=norm(r.phone);if(!p||seen.has(p))return;seen.add(p);const prev=byPhone.get(p)||{};out.push({prio:r.grade||prev.prio||'B',prov:prev.prov||'',city:r.city||'',name:r.name||'',phone:r.phone,category:r.category,status:prev.status||'Belum dihubungi',notes:r.notes||prev.notes||'',marketing:prev.marketing||'',lastContact:prev.lastContact||'',nextFollow:prev.nextFollow||'',history:prev.history||[]})});return out}
+  async function update(){const b=document.getElementById('updateDbBtn');if(b){b.disabled=true;b.textContent='⏳ Mengambil database live...'}try{let local=mergeLegacy(localData());let live=[];try{live=await supabaseContacts()}catch(e){live=[]}if(live.length){data=normalizeRemote(live,local);localStorage.setItem(KEY,JSON.stringify(data));if(typeof renderCats==='function')renderCats();if(typeof render==='function')render();await fetchTemplates();alert('Update berhasil dari Supabase. '+data.length+' customer dan template WA terbaru sudah dimuat.')}else{const r=await fetch(REMOTE+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('Database online belum tersedia');const text=await r.text();const m=text.match(/const\s+CATEGORY_DATA\s*=\s*([\s\S]*);\s*$/);if(!m)throw new Error('Format database tidak dikenali');const remote=Function('return ('+m[1]+')')();const rows=[];Object.keys(remote||{}).forEach(cat=>(remote[cat]||[]).forEach(x=>rows.push({prio:x[3]||'B',prov:'',city:x[1]||'',name:x[0],phone:x[2],category:cat})));const seen=new Set(local.map(x=>norm(x.phone)).filter(Boolean));rows.forEach(x=>{const p=norm(x.phone);if(p&&!seen.has(p)){seen.add(p);local.push(Object.assign(x,{status:'Belum dihubungi',notes:'',marketing:'',lastContact:'',nextFollow:'',history:[]}))}});data=local;localStorage.setItem(KEY,JSON.stringify(data));await fetchTemplates();if(typeof renderCats==='function')renderCats();if(typeof render==='function')render();alert('Update fallback berhasil. Supabase belum berisi data kontak, jadi database GitHub digunakan sementara.')}}catch(e){alert('Update gagal: '+e.message)}finally{if(b){b.disabled=false;b.textContent='🔄 Update Database'}}}
+  async function startup(){button();try{const live=await supabaseContacts();if(live.length){const local=mergeLegacy(localData());data=normalizeRemote(live,local);localStorage.setItem(KEY,JSON.stringify(data));if(typeof renderCats==='function')renderCats();if(typeof render==='function')render()}}catch(e){}await fetchTemplates()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startup);else startup();
 })();
