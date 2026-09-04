@@ -24,6 +24,14 @@ public class MainActivity extends Activity {
         s.setAllowContentAccess(true);
 
         web.setWebViewClient(new WebViewClient() {
+            @Override public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                // Load the live Supabase updater after the local HTML is ready.
+                // This keeps the bundled database as an offline fallback while
+                // allowing contacts/templates to change without reinstalling.
+                view.loadUrl("javascript:(function(){if(window.__satuRestoeUpdaterLoaded)return;window.__satuRestoeUpdaterLoaded=true;var s=document.createElement('script');s.src='file:///android_asset/updater.js?t='+Date.now();document.head.appendChild(s);})()");
+            }
+
             @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url != null && url.startsWith("https://wa.me/")) {
                     openWhatsAppBusiness(url);
@@ -55,4 +63,4 @@ public class MainActivity extends Activity {
     }
 }
 
-// Build trigger: refreshed APK after mobile database card alignment fix.
+// Build trigger: refreshed APK with live Supabase database/template updater.
