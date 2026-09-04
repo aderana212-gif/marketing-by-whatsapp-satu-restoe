@@ -66,3 +66,4 @@ jobs:
           retention-days: 30
 
 # v1.3: one-time install adds remote WhatsApp template updates.
+# rebuild trigger
