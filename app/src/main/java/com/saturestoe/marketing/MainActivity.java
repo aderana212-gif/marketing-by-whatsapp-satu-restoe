@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
                 // Load the live Supabase updater after the local HTML is ready.
                 // This keeps the bundled database as an offline fallback while
                 // allowing contacts/templates to change without reinstalling.
-                view.loadUrl("javascript:(function(){if(window.__satuRestoeUpdaterLoaded)return;window.__satuRestoeUpdaterLoaded=true;var s=document.createElement('script');s.src='file:///android_asset/updater.js?t='+Date.now();document.head.appendChild(s);})()");
+                view.loadUrl("javascript:(function(){if(window.__satuRestoeUpdaterLoaded)return;window.__satuRestoeUpdaterLoaded=true;var s=document.createElement('script');s.src='file:///android_asset/updater.js?t='+Date.now();document.head.appendChild(s);var st=document.createElement('style');st.textContent='textarea{font-family:Arial,sans-serif!important;line-height:1.45}body{padding-bottom:96px!important}main{padding-bottom:24px!important}';document.head.appendChild(st);})()");
             }
 
             @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -63,4 +63,4 @@ public class MainActivity extends Activity {
     }
 }
 
-// Build trigger: refreshed APK with live Supabase database/template updater.
+// Build trigger: mobile typography and bottom safe spacing.
