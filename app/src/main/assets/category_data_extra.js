@@ -6,7 +6,8 @@ if (typeof CATEGORY_DATA === 'object') {
     ['Banagara Tour Travel','Ciamis','0851-1939-5590','A'],
     ['Hasby Tour & Travel','Ciamis','0857-8049-7907','A'],
     ['BRIDGE HOLIDAY TOUR & TRAVEL','Subang','0818-0910-4875','A'],
-    ['M-Trans Travel Subang','Subang','0857-2009-8262','A']
+    ['M-Trans Travel Subang','Subang','0857-2009-8262','A'],
+    ['Ana Tour & Travel','Subang','0821-2122-2328','A']
   );
   CATEGORY_DATA.bus.push(
     ['PT Andalas Galuh Pradja','Bandung/Ciamis','0813-2373-2732','A'],
