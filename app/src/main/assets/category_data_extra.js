@@ -34,6 +34,8 @@ if (typeof CATEGORY_DATA === 'object') {
   CATEGORY_DATA.wedding.push(
     ['Ahli Wedding Organizer & Catering Ciamis','Ciamis','0821-2087-6664','B'],
     ['Zen Wedding Planner Purwokerto','Purwokerto','0822-2100-9840','A'],
-    ['LINTANG WEDDING ORGANIZER','Subang','0821-1551-8914','A']
+    ['LINTANG WEDDING ORGANIZER','Subang','0821-1551-8914','A'],
+    ['Renjana Wedding Planner & Organizer','Subang','0813-2169-5672','A'],
+    ['IKA WEDDING ORGANIZER','Subang','0821-2406-4934','A']
   );
 }
