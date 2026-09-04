@@ -16,13 +16,20 @@
   function applyTemplates(t){
     if(!t||typeof t!=='object')return;
     localStorage.setItem(TEMPLATE_KEY,JSON.stringify(t));
-    const apply=()=>{
-      const get=k=>{const x=t[k];return x?x.replaceAll('[NAMA]','Bapak/Ibu'):null};
-      if(typeof newCustomer==='function' && !newCustomer.__remoteWrapped){const old=newCustomer;const f=function(){old();const k=document.getElementById('category')?.value||'travel';const v=get(k);if(v)document.getElementById('message').value=v};f.__remoteWrapped=true;window.newCustomer=f;}
-      if(typeof pick==='function' && !pick.__remoteWrapped){const old=pick;const f=function(i){old(i);const k=document.getElementById('category')?.value||'travel';const v=get(k);if(v)document.getElementById('message').value=v};f.__remoteWrapped=true;window.pick=f;}
-      const k=document.getElementById('category')?.value||'travel';const v=get(k);if(v&&document.getElementById('message')&&document.getElementById('title')?.textContent==='Customer Baru')document.getElementById('message').value=v;
-    };
-    if(typeof newCustomer==='function')apply();else setTimeout(apply,300);
+    const get=k=>t[k]||null;
+    const put=()=>{const k=document.getElementById('category')?.value||'travel';const v=get(k);const m=document.getElementById('message');if(v&&m)m.value=v;};
+    // Apply immediately to an already-open new-customer form.
+    put();
+    // The app's original newCustomer() function is a declaration, so replacing window.newCustomer
+    // does not reliably intercept later calls. Use click/change listeners instead.
+    if(!window.__remoteTemplateListeners){
+      window.__remoteTemplateListeners=true;
+      document.addEventListener('click',e=>{
+        const el=e.target?.closest?.('button');
+        if(el && /Tambah Customer/i.test(el.textContent||'')) setTimeout(put,50);
+      },true);
+      document.addEventListener('change',e=>{if(e.target?.id==='category')setTimeout(put,20)},true);
+    }
   }
   async function fetchTemplates(){
     try{const r=await fetch(TEMPLATE_REMOTE+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const text=await r.text();const m=text.match(/const\s+REMOTE_TEMPLATES\s*=\s*([\s\S]*);\s*$/);if(!m)throw new Error('Format template tidak dikenali');const t=Function('return ('+m[1]+')')();applyTemplates(t);return true;}
@@ -37,7 +44,9 @@
       const r=await fetch(REMOTE+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const text=await r.text();const m=text.match(/const\s+CATEGORY_DATA\s*=\s*([\s\S]*);\s*$/);if(!m)throw new Error('Format database tidak dikenali');
       const remote=Function('return ('+m[1]+')')();const rows=[];Object.keys(remote||{}).forEach(cat=>(remote[cat]||[]).forEach(x=>{const city=x[1]||'';const jateng=/Tegal|Wonosobo|Banyumas|Purwokerto|Cilacap|Kebumen|Magelang|Pekalongan|Pemalang/.test(city);rows.push({prio:x[3]||'B',prov:jateng?'Jawa Tengah':'Jawa Barat',city:city,name:x[0],phone:x[2],category:cat,status:'Belum dihubungi',notes:'',marketing:'',lastContact:'',nextFollow:'',history:[]})}));
       const added=mergeInto(local,rows);localStorage.setItem(KEY,JSON.stringify(local));if(typeof data!=='undefined')data=local;
-      const templatesUpdated=await fetchTemplates();if(typeof renderCats==='function')renderCats();if(typeof render==='function')render();if(typeof newCustomer==='function')newCustomer();
+      const templatesUpdated=await fetchTemplates();if(typeof renderCats==='function')renderCats();if(typeof render==='function')render();
+      // Refresh template after render/new form changes.
+      setTimeout(()=>{try{const t=JSON.parse(localStorage.getItem(TEMPLATE_KEY)||'null');if(t)applyTemplates(t)}catch(e){}},80);
       alert('Update berhasil. '+(restored+added)+' data dipulihkan/ditambahkan. Total '+local.length+' customer.'+(templatesUpdated?' Template WA juga diperbarui.':''));
     }catch(e){alert('Update gagal: '+e.message)}finally{if(b){b.disabled=false;b.textContent='🔄 Update Database'}}
   }
