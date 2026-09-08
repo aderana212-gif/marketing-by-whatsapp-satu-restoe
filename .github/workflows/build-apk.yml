@@ -41,7 +41,9 @@ jobs:
           s = s.replace('*{box-sizing:border-box}', '*{box-sizing:border-box}html,body{width:100%;max-width:100%;overflow-x:hidden}body{min-width:0}.wrap{width:100%;min-width:0}.card,.grid,.row,.table{min-width:0;max-width:100%}.table{width:100%}button,input,select,textarea{max-width:100%}')
           s = s.replace('.cats{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}', '.cats{grid-template-columns:repeat(3,1fr)}.cat{min-height:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.stats{grid-template-columns:1fr 1fr}')
           if 'updater.js' not in s:
-              s = s.replace('<script src="category_data.js"></script>', '<script src="category_data.js"></script><script src="updater.js"></script>')
+              s = s.replace('<script src="category_data.js"></script>', '<script src="category_data.js"></script><script src="updater.js"></script><script src="buttons.js"></script>')
+          elif 'buttons.js' not in s:
+              s = s.replace('<script src="updater.js"></script>', '<script src="updater.js"></script><script src="buttons.js"></script>')
           p.write_text(s, encoding='utf-8')
           PY
 
