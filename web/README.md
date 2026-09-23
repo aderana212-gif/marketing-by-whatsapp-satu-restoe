@@ -18,3 +18,5 @@ Web app for managing Satu Restoe marketing contacts and WhatsApp follow-up.
 - The Android APK source is untouched.
 
 Important: the old APK's local status/history is not automatically available to the web app. If an old backup file can be obtained safely, use the web import feature after logging in. Imported rows that match an existing WhatsApp number are written to cloud status/history; unmatched numbers are reported and skipped.
+
+<!-- Cloudflare deployment trigger: 2026-09-23T12:46:38.678Z -->
