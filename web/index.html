@@ -27,6 +27,7 @@
 <section class="card"><h2 id="title">Pilih Customer</h2><div id="detail" class="muted">Pilih customer dari daftar.</div></section>
 <section class="card" id="editor">
 <label>Status</label><select id="status"><option>Belum dihubungi</option><option>Sudah dihubungi</option><option>Follow Up</option><option>Respon</option><option>Deal</option></select>
+<div class="quick"><span>Status cepat:</span><button type="button" onclick="quickStatus('Sudah dihubungi')">Dihubungi</button><button type="button" onclick="quickStatus('Follow Up')">Follow Up</button><button type="button" onclick="quickStatus('Respon')">Respon</button><button type="button" onclick="quickStatus('Deal')">Deal</button></div>
 <label>Marketing</label><input id="marketing">
 <label>Terakhir Dihubungi</label><input id="lastContact" type="datetime-local">
 <label>Jadwal Follow Up</label><input id="nextFollow" type="datetime-local">
