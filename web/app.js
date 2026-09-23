@@ -69,4 +69,14 @@ async function importBackupFile(file){
   render();if(selected)pick(selected.id);$('appMsg').textContent='Import selesai: '+changed+' customer diperbarui, '+skipped+' nomor tidak ditemukan di database.';
 }
 $('todayBtn').onclick=()=>filterFollow('today');$('overdueBtn').onclick=()=>filterFollow('overdue');$('resetViewBtn').onclick=resetView;$('clearSearch').onclick=()=>{$('search').value='';render()};$('priorityBtn').onclick=()=>{followFilter='';selectedIds.clear();statusFilter.value='Belum dihubungi';gradeFilter.value='A';search.value='';render();updateDashboard()};
-$('search').oninput=()=>{followFilter='';selectedIds.clear();render()};$('statusFilter').onchange=()=>{followFilter='';selectedIds.clear();render()};$('gradeFilter').onchange=()=>{followFilter='';selectedIds.clear();render()};$('saveBtn').onclick=saveStatus;$('waBtn').onclick=openWA;$('saveWaBtn').onclick=saveAndWA;$('previewBtn').onclick=previewMessage;$('copyMsgBtn').onclick=copyMessage;$('exportBtn').onclick=exportCSV;$('backupBtn').onclick=backupJSON;$('importFile').onchange=e=>{const f=e.target.files?.[0];if(f)importBackupFile(f);e.target.value=''};load();
+$('search').oninput=()=>{followFilter='';selectedIds.clear();render()};$('statusFilter').onchange=()=>{followFilter='';selectedIds.clear();render()};$('gradeFilter').onchange=()=>{followFilter='';selectedIds.clear();render()};$('saveBtn').onclick=saveStatus;$('waBtn').onclick=openWA;$('saveWaBtn').onclick=saveAndWA;$('previewBtn').onclick=previewMessage;$('copyMsgBtn').onclick=copyMessage;$('exportBtn').onclick=exportCSV;$('backupBtn').onclick=backupJSON;$('importFile').onchange=e=>{const f=e.target.files?.[0];if(f)importBackupFile(f);e.target.value=''};async function startAnonymousSession(){
+  const {data:{session:existing}}=await db.auth.getSession();
+  if(existing)return true;
+  const {data,error}=await db.auth.signInAnonymously();
+  if(error){
+    $('appMsg').textContent='Gagal membuat session otomatis: '+error.message;
+    return false;
+  }
+  return !!data?.session;
+}
+(async()=>{await startAnonymousSession();await load()})();
