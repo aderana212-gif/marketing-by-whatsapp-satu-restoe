@@ -173,3 +173,20 @@ tbody tr:hover{background:#eaf3ff}
   .cats button{min-height:42px;padding:9px 13px;scroll-snap-align:start;font-size:12px}
   .cats button:active{transform:scale(.97)}
 }
+
+
+/* Search and filter bar polish */
+.searchRow{background:#fff;border:1px solid #e1e7ef;border-radius:11px;padding:5px 6px 5px 10px;box-shadow:0 2px 8px #00000008}
+.searchRow input{border:0;margin:0;padding:8px 5px;outline:none!important;box-shadow:none}
+.searchRow button{margin:0;min-height:36px;padding:7px 12px}
+.filters select{background:#fff}
+@media(max-width:600px){
+  .searchRow{top:62px;padding:5px}
+  .searchRow input{font-size:16px}
+  .searchRow button{min-height:38px;padding:7px 11px}
+  .filters{grid-template-columns:1fr 1fr}
+  .filters select{min-height:42px;margin:3px 0 6px}
+}
+@media(max-width:380px){
+  .filters{grid-template-columns:1fr}
+}
