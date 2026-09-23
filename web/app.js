@@ -1,0 +1,33 @@
+const SUPABASE_URL='https://xgidnneeovsqfysleeua.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_bcLO52pj7tmWEHBPxziSH_ElYtHWM0';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const CATS={travel:'🧳 Travel',bus:'🚌 Bus',eo:'🎪 EO/MICE',corp:'🏢 Corporate',wedding:'💍 Wedding',community:'👥 Community'};
+const STATUSES=['Belum dihubungi','Sudah dihubungi','Follow Up','Respon','Deal'];
+let contacts=[],statuses=new Map(),currentCat='travel',selected=null,session=null;
+const $=id=>document.getElementById(id);
+const norm=p=>String(p||'').replace(/\D/g,'').replace(/^0/,'62');
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function localDT(v){return v?new Date(v).toISOString().slice(0,16):''}
+function msg(c){return 'Assalamu’alaikum Bapak/Ibu '+(c?.name||'')+' 🙏\n\nPerkenalkan, kami dari SATU RESTOE Pangandaran.\n\nKami membuka kerja sama untuk kebutuhan rombongan di Pangandaran. 🍽️🌴\n\nBoleh kami kirimkan menu & paket Satu Restoe?\n\nTerima kasih 🙏\nSATU RESTOE PANGANDARAN\nWA 0812-2011-1178'}
+async function load(){
+  const {data,error}=await db.from('marketing_contacts').select('id,name,city,phone,category,grade,active,notes,updated_at').eq('active',true).order('id');
+  if(error){$('appMsg').textContent='Gagal mengambil kontak: '+error.message;return}
+  contacts=data||[];
+  if(session){const {data:s,error:e}=await db.from('marketing_contact_status').select('*');if(!e)(s||[]).forEach(x=>statuses.set(x.contact_id,x))}
+  renderCats();render();newCustomer();
+}
+function renderCats(){ $('cats').innerHTML=Object.entries(CATS).map(([k,v])=>'<button class="'+(k===currentCat?'active':'')+'" onclick="setCat(\''+k+'\')">'+v+'</button>').join('') }
+function setCat(k){currentCat=k;selected=null;renderCats();render();newCustomer()}
+function visible(){const q=$('search').value.toLowerCase(),sf=$('statusFilter').value,gf=$('gradeFilter').value;return contacts.filter(c=>c.category===currentCat&&(!q||[c.name,c.city,c.phone].join(' ').toLowerCase().includes(q))&&(!sf||((statuses.get(c.id)?.status)||'Belum dihubungi')===sf)&&(!gf||c.grade===gf))}
+function render(){const arr=visible();$('tbody').innerHTML=arr.map((c,i)=>{const st=statuses.get(c.id)?.status||'Belum dihubungi';return '<tr onclick="pick('+c.id+')"><td>'+(i+1)+'</td><td>'+esc(c.grade)+'</td><td>'+esc(c.name)+'</td><td>'+esc(c.city)+'</td><td>'+esc(c.phone)+'</td><td>'+esc(st)+'</td></tr>'}).join('');const cat=contacts.filter(c=>c.category===currentCat),count=s=>cat.filter(c=>(statuses.get(c.id)?.status||'Belum dihubungi')===s).length;$('total').textContent=cat.length;$('new').textContent=count('Belum dihubungi');$('follow').textContent=count('Follow Up');$('resp').textContent=count('Respon')+count('Deal')}
+function pick(id){selected=contacts.find(c=>c.id===id)||null;if(!selected)return;const s=statuses.get(id)||{};$('title').textContent=selected.name;$('detail').innerHTML='<b>'+esc(selected.city||'')+'</b> • '+esc(selected.category)+' • '+esc(selected.grade)+'<br>WhatsApp: '+esc(selected.phone);$('status').value=s.status||'Belum dihubungi';$('marketing').value=s.marketing||'';$('lastContact').value=localDT(s.last_contact);$('nextFollow').value=localDT(s.next_follow);$('notes').value=s.notes||'';historyView(s.history||[])}
+function newCustomer(){$('title').textContent='Pilih Customer';$('detail').textContent='Pilih customer dari daftar.';$('status').value='Belum dihubungi';$('marketing').value='';$('lastContact').value='';$('nextFollow').value='';$('notes').value='';$('history').textContent='Belum ada riwayat.'}
+function historyView(h){$('history').innerHTML=h.length?h.slice().reverse().map(a=>'<div class="hist">'+new Date(a.date).toLocaleString('id-ID')+' — <b>'+esc(a.action)+'</b>'+(a.note?' — '+esc(a.note):'')+'</div>').join(''):'Belum ada riwayat.'}
+async function saveStatus(){if(!session){$('appMsg').textContent='Silakan login dulu untuk menyimpan status.';return}if(!selected){$('appMsg').textContent='Pilih customer dulu.';return}const old=statuses.get(selected.id)||{};const st=$('status').value;const history=Array.isArray(old.history)?old.history.slice():[];if(old.status!==st||!old.contact_id){history.push({date:new Date().toISOString(),action:st,note:$('notes').value.trim()})}const row={contact_id:selected.id,status:st,marketing:$('marketing').value.trim(),last_contact:$('lastContact').value?new Date($('lastContact').value).toISOString():null,next_follow:$('nextFollow').value?new Date($('nextFollow').value).toISOString():null,notes:$('notes').value.trim(),history,updated_by:session.user.id,updated_at:new Date().toISOString()};const {data,error}=await db.from('marketing_contact_status').upsert(row,{onConflict:'contact_id'}).select().single();if(error){$('appMsg').textContent='Gagal menyimpan: '+error.message;return}statuses.set(selected.id,data);render();pick(selected.id);$('appMsg').textContent='Status tersimpan di Supabase.'}
+function openWA(){if(!selected)return;const p=norm(selected.phone);window.open('https://wa.me/'+p+'?text='+encodeURIComponent(msg(selected)),'_blank')}
+function exportCSV(){const rows=[['Nama','Kategori','Kota','WhatsApp','Prioritas','Status','Marketing','Terakhir Dihubungi','Follow Up','Catatan']];contacts.filter(c=>c.category===currentCat).forEach(c=>{const s=statuses.get(c.id)||{};rows.push([c.name,c.category,c.city,c.phone,c.grade,s.status||'Belum dihubungi',s.marketing||'',s.last_contact||'',s.next_follow||'',s.notes||''])});const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='SatuRestoe_'+currentCat+'_web.csv';a.click()}
+async function login(){const email=$('email').value.trim();if(!email)return;$('loginMsg').textContent='Mengirim link...';const {error}=await db.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});$('loginMsg').textContent=error?error.message:'Link login sudah dikirim ke email.'}
+async function logout(){await db.auth.signOut()}
+$('search').oninput=render;$('statusFilter').onchange=render;$('gradeFilter').onchange=render;$('saveBtn').onclick=saveStatus;$('waBtn').onclick=openWA;$('exportBtn').onclick=exportCSV;$('sendOtp').onclick=login;$('loginBtn').onclick=()=>$('loginCard').classList.toggle('hidden');$('logoutBtn').onclick=logout;
+db.auth.onAuthStateChange(async(_event,s)=>{session=s;$('loginBtn').classList.toggle('hidden',!!s);$('logoutBtn').classList.toggle('hidden',!s);$('loginCard').classList.toggle('hidden',!!s);statuses=new Map();await load()});
+load();
