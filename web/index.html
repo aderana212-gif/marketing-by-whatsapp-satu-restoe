@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Marketing by WhatsApp — Satu Restoe</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header><div class="wrap"><div><h1>MARKETING BY WHATSAPP — SATU RESTOE</h1><p>744 customer • Status tersimpan di cloud • Bisa dibuka dari HP/PC</p></div><button id="loginBtn" class="light">Login</button></div></header>
+<main class="wrap">
+<section id="loginCard" class="card hidden">
+<h2>Login Marketing</h2><p>Masukkan email untuk menerima magic link.</p>
+<div class="row"><input id="email" type="email" placeholder="Email"></div>
+<button id="sendOtp" class="blue">Kirim Link Login</button><div id="loginMsg" class="muted"></div>
+</section>
+<section class="card">
+<div class="stats"><div><span>Total</span><b id="total">0</b></div><div><span>Belum Dihubungi</span><b id="new">0</b></div><div><span>Follow Up</span><b id="follow">0</b></div><div><span>Respon/Deal</span><b id="resp">0</b></div></div>
+</section>
+<section class="card">
+<div class="toolbar"><div class="cats" id="cats"></div><button id="logoutBtn" class="gray hidden">Logout</button></div>
+<input id="search" placeholder="Cari nama, kota, WhatsApp..." autocomplete="off">
+<div class="filters"><select id="statusFilter"><option value="">Semua Status</option><option>Belum dihubungi</option><option>Sudah dihubungi</option><option>Follow Up</option><option>Respon</option><option>Deal</option></select><select id="gradeFilter"><option value="">Semua Prioritas</option><option>A</option><option>B</option></select></div>
+<div class="table"><table><thead><tr><th>No</th><th>P</th><th>Nama</th><th>Kota</th><th>WA</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div>
+</section>
+<section class="grid">
+<section class="card"><h2 id="title">Pilih Customer</h2><div id="detail" class="muted">Pilih customer dari daftar.</div></section>
+<section class="card" id="editor">
+<label>Status</label><select id="status"><option>Belum dihubungi</option><option>Sudah dihubungi</option><option>Follow Up</option><option>Respon</option><option>Deal</option></select>
+<label>Marketing</label><input id="marketing">
+<label>Terakhir Dihubungi</label><input id="lastContact" type="datetime-local">
+<label>Jadwal Follow Up</label><input id="nextFollow" type="datetime-local">
+<label>Catatan</label><textarea id="notes"></textarea>
+<div class="row"><button class="blue" id="saveBtn">Simpan Status</button><button class="green" id="waBtn">WA Business</button></div>
+<h3>Riwayat Kontak</h3><div id="history" class="history">Belum ada riwayat.</div>
+</section>
+</section>
+<section class="card"><h3>Backup</h3><p>Export CSV di web ini mengambil data kontak + status cloud. Import backup akan kita tambahkan setelah data lama dari APK berhasil diamankan.</p><button id="exportBtn" class="gray">Export CSV</button><span id="appMsg" class="muted"></span></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./app.js"></script>
+</body></html>
