@@ -7,44 +7,35 @@
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header><div class="wrap"><div><h1>MARKETING BY WHATSAPP — SATU RESTOE</h1><p>Data customer cloud • Status tersimpan di cloud • Bisa dibuka dari HP/PC</p></div></div></header>
+<header><div class="wrap"><div><h1>MARKETING BY WHATSAPP — SATU RESTOE</h1><p>Kirim WhatsApp ke customer • Tandai sudah dihubungi • Data tersimpan di cloud</p></div></div></header>
 <main class="wrap">
 <section class="card">
-<div class="stats"><div><span>Total</span><b id="total">0</b></div><div><span>Belum Dihubungi</span><b id="new">0</b></div><div><span>Follow Up</span><b id="follow">0</b></div><div><span>Respon/Deal</span><b id="resp">0</b></div></div>
-<div id="alertBar" class="alertBar hidden"></div>
-<div class="dashboard">
-  <div><span>Follow Up Hari Ini</span><b id="todayFollow">0</b></div>
-  <div><span>Follow Up Terlambat</span><b id="overdueFollow">0</b></div>
-  <div><span>Kontak Aktif</span><b id="contacted">0</b></div>
-  <div><span>Deal</span><b id="deals">0</b></div>
+<div class="stats">
+<div><span>Total</span><b id="total">0</b></div>
+<div><span>Belum Dihubungi</span><b id="new">0</b></div>
+<div><span>Sudah Dihubungi</span><b id="contacted">0</b></div>
 </div>
-<div class="dashActions"><button id="todayBtn" class="gray">Tampilkan Follow Up Hari Ini</button><button id="overdueBtn" class="gray">Tampilkan Terlambat</button><button id="priorityBtn" class="blue">🎯 A + Belum Dihubungi</button><button id="resetViewBtn" class="gray">Reset Filter</button></div>
 </section>
 <section class="card">
 <div class="toolbar"><div class="cats" id="cats"></div></div>
 <div class="searchRow"><input id="search" placeholder="Cari nama, kota, WhatsApp..." autocomplete="off"><button id="clearSearch" class="gray" type="button">Clear</button></div>
-<div class="filters"><select id="statusFilter"><option value="">Semua Status</option><option>Belum dihubungi</option><option>Sudah dihubungi</option><option>Follow Up</option><option>Respon</option><option>Deal</option></select><select id="gradeFilter"><option value="">Semua Prioritas</option><option>A</option><option>B</option></select></div>
-<div class="bulkBar"><label><input id="selectAll" type="checkbox"> Pilih semua yang tampil</label><span id="selectedCount">0 dipilih</span><button id="waSelectedBtn" class="green" type="button">WA Berikutnya</button></div><div class="table"><table><thead><tr><th>✓</th><th>No</th><th>P</th><th>Nama</th><th>Kota</th><th>WA</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div>
+<div class="filters"><select id="statusFilter"><option value="">Semua Status</option><option value="Belum dihubungi">Belum Dihubungi</option><option value="Sudah dihubungi">Sudah Dihubungi</option></select></div>
+<div class="bulkBar"><label><input id="selectAll" type="checkbox"> Pilih semua yang tampil</label><span id="selectedCount">0 dipilih</span><button id="waSelectedBtn" class="green" type="button">WA Berikutnya</button></div>
+<div class="table"><table><thead><tr><th>✓</th><th>No</th><th>P</th><th>Nama</th><th>Kota</th><th>WA</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div>
 </section>
-<section class="card followCard"><h2>📅 Daftar Follow Up</h2><div id="followList" class="followList">Belum ada follow-up.</div></section>
-<section class="card"><h2>🕘 Aktivitas Terakhir</h2><div id="recentActivity" class="followList">Belum ada aktivitas.</div></section>
 <section class="grid">
 <section class="card editorCard"><h2 id="title">Pilih Customer</h2><div id="detail" class="muted detailBox">Pilih customer dari daftar.</div></section>
 <section class="card editorCard" id="editor">
-<label>Status</label><select id="status"><option>Belum dihubungi</option><option>Sudah dihubungi</option><option>Follow Up</option><option>Respon</option><option>Deal</option></select>
-<div class="quick"><span>Status cepat:</span><button type="button" onclick="quickStatus('Sudah dihubungi')">Dihubungi</button><button type="button" onclick="quickStatus('Follow Up')">Follow Up</button><button type="button" onclick="quickStatus('Respon')">Respon</button><button type="button" onclick="quickStatus('Deal')">Deal</button></div>
-<label>Marketing</label><input id="marketing">
-<label>Terakhir Dihubungi</label><input id="lastContact" type="datetime-local">
-<label>Jadwal Follow Up</label><input id="nextFollow" type="datetime-local">
-<label>Catatan</label><textarea id="notes"></textarea>
-<div class="row editorActions"><button class="green primaryAction" id="saveWaBtn">💾 Simpan & WA</button><button class="blue secondaryAction" id="saveBtn">Simpan Status</button><button class="green secondaryAction" id="waBtn">WA Business</button><button class="gray secondaryAction" id="previewBtn" type="button">👁️ Preview Pesan</button><button class="gray secondaryAction" id="copyMsgBtn" type="button">📋 Copy Pesan</button></div><pre id="messagePreview" class="messagePreview hidden"></pre>
-<h3>Riwayat Kontak</h3><div id="history" class="history">Belum ada riwayat.</div>
+<label>Status</label>
+<select id="status"><option>Belum dihubungi</option><option>Sudah dihubungi</option></select>
+<div class="row editorActions">
+<button class="green primaryAction" id="waBtn">💬 WA Customer</button>
+<button class="blue secondaryAction" id="saveBtn">Simpan Status</button>
+</div>
+<pre id="messagePreview" class="messagePreview hidden"></pre>
 </section>
 </section>
-<section class="card"><h3>Backup & Migrasi</h3><p>Backup JSON menyimpan kontak, status, catatan, dan seluruh riwayat cloud. CSV dapat dipakai untuk migrasi data lama; pencocokan customer menggunakan nomor WhatsApp.</p>
-<div class="row"><button id="exportBtn" class="gray">Export CSV</button><button id="backupBtn" class="gray">Backup JSON</button><label class="fileBtn gray">Import CSV/Backup <input id="importFile" type="file" accept=".csv,text/csv,.json,application/json" hidden></label></div>
-<span id="appMsg" class="muted"></span>
-</section>
+<section class="card"><span id="appMsg" class="muted"></span></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./config.js"></script>
