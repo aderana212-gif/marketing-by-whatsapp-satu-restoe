@@ -8,7 +8,7 @@ const $=id=>document.getElementById(id);
 const norm=p=>String(p||'').replace(/\D/g,'').replace(/^0/,'62');
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function localDT(v){return v?new Date(v).toISOString().slice(0,16):''}
-function msg(c){const t=templates.get(c?.category);if(t){return t.replaceAll('[NAMA]',c?.name||'').replaceAll('\\\\n','\n')}return 'Assalamu’alaikum Bapak/Ibu '+(c?.name||'')+' 🙏\n\nPerkenalkan, kami dari SATU RESTOE Pangandaran.\n\nKami membuka kerja sama untuk kebutuhan rombongan di Pangandaran. 🍽️🌴\n\nBoleh kami kirimkan menu & paket Satu Restoe?\n\nTerima kasih 🙏\nSATU RESTOE PANGANDARAN\nWA 0812-2011-1178'}
+function msg(c){const t=templates.get(c?.category);if(t){return t.replaceAll('[NAMA]',c?.name||'').replaceAll('\\n','\n')}return 'Assalamu’alaikum Bapak/Ibu '+(c?.name||'')+' 🙏\n\nPerkenalkan, kami dari SATU RESTOE Pangandaran.\n\nKami membuka kerja sama untuk kebutuhan rombongan di Pangandaran. 🍽️🌴\n\nBoleh kami kirimkan menu & paket Satu Restoe?\n\nTerima kasih 🙏\nSATU RESTOE PANGANDARAN\nWA 0812-2011-1178'}
 async function load(){
   const {data,error}=await db.from('marketing_contacts').select('id,name,city,phone,category,grade,active,notes,updated_at').eq('active',true).order('id');
   if(error){$('appMsg').textContent='Gagal mengambil kontak: '+error.message;return}
