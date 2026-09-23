@@ -17,3 +17,9 @@
   .cats button{flex:0 0 auto}
   .row button,.row .fileBtn{width:100%;justify-content:center}
 }
+
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.dashboard>div{background:#f8fafc;border:1px solid #e1e7ef;border-radius:10px;padding:10px}
+.dashboard span{display:block;color:#667085;font-size:12px}.dashboard b{font-size:19px}
+.dashActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+@media(max-width:600px){.dashboard{grid-template-columns:1fr 1fr}.dashActions button{flex:1 1 100%}}
