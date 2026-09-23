@@ -34,7 +34,29 @@ function render(){
 }
 function updateSelectionUI(){const arr=visible(),n=[...selectedIds].filter(id=>arr.some(c=>c.id===id)).length;$('selectedCount').textContent=n+' dipilih';$('waSelectedBtn').disabled=n===0;$('selectAll').checked=arr.length>0&&arr.every(c=>selectedIds.has(c.id))}
 function toggleAllVisible(){const arr=visible(),all=arr.length>0&&arr.every(c=>selectedIds.has(c.id));arr.forEach(c=>all?selectedIds.delete(c.id):selectedIds.add(c.id));if(arr.length&&!all)pick(arr[0].id);render()}
-async function saveStatus(st=$('status').value){const {data:{session}}=await db.auth.getSession();if(!session){$('appMsg').textContent='Session belum aktif. Silakan refresh halaman sekali lagi.';return false}if(!selected){$('appMsg').textContent='Pilih customer dulu.';return false}const old=statuses.get(selected.id)||{},row={contact_id:selected.id,status:st,marketing:old.marketing||'',last_contact:st==='Sudah dihubungi'?new Date().toISOString():old.last_contact||null,next_follow:old.next_follow||null,notes:old.notes||'',history:Array.isArray(old.history)?old.history:[],updated_by:null,updated_at:new Date().toISOString()};const {data,error}=await db.from('marketing_contact_status').upsert(row,{onConflict:'contact_id'}).select().single();if(error){$('appMsg').textContent='Gagal menyimpan: '+error.message;return false}statuses.set(selected.id,data);$('status').value=st;render();pick(selected.id);$('appMsg').textContent='Status: '+st;return true}
+async function saveStatus(st=$('status').value){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){$('appMsg').textContent='Session belum aktif. Silakan refresh halaman sekali lagi.';return false}
+ const ids=[...selectedIds];
+ if(ids.length){
+   const rows=ids.map(id=>{
+     const c=contacts.find(x=>x.id===id),old=statuses.get(id)||{};
+     return {contact_id:id,status:st,marketing:old.marketing||'',last_contact:st==='Sudah dihubungi'?new Date().toISOString():old.last_contact||null,next_follow:old.next_follow||null,notes:old.notes||'',history:Array.isArray(old.history)?old.history:[],updated_by:null,updated_at:new Date().toISOString()};
+   });
+   const {data,error}=await db.from('marketing_contact_status').upsert(rows,{onConflict:'contact_id'}).select();
+   if(error){$('appMsg').textContent='Gagal menyimpan '+ids.length+' customer: '+error.message;return false}
+   (data||[]).forEach(x=>statuses.set(x.contact_id,x));
+   $('status').value=st;
+   render();
+   $('appMsg').textContent='Berhasil menyimpan status '+st+' untuk '+ids.length+' customer.';
+   return true;
+ }
+ if(!selected){$('appMsg').textContent='Pilih customer dulu.';return false}
+ const old=statuses.get(selected.id)||{},row={contact_id:selected.id,status:st,marketing:old.marketing||'',last_contact:st==='Sudah dihubungi'?new Date().toISOString():old.last_contact||null,next_follow:old.next_follow||null,notes:old.notes||'',history:Array.isArray(old.history)?old.history:[],updated_by:null,updated_at:new Date().toISOString()};
+ const {data,error}=await db.from('marketing_contact_status').upsert(row,{onConflict:'contact_id'}).select().single();
+ if(error){$('appMsg').textContent='Gagal menyimpan: '+error.message;return false}
+ statuses.set(selected.id,data);$('status').value=st;render();pick(selected.id);$('appMsg').textContent='Status: '+st;return true
+}
 async function openWA(){if(!selected){$('appMsg').textContent='Pilih customer dulu.';return}const {data:{session}}=await db.auth.getSession();if(!session){$('appMsg').textContent='Session belum aktif. Silakan refresh halaman sekali lagi.';return}const p=norm(selected.phone);const win=window.open('https://wa.me/'+p+'?text='+encodeURIComponent(msg(selected)),'_blank');if(!win){$('appMsg').textContent='Popup WhatsApp diblokir browser.';return}await saveStatus('Sudah dihubungi')}
 function pick(id){selected=contacts.find(c=>c.id===id)||null;if(!selected)return;const s=statuses.get(id)||{};$('title').textContent=selected.name;$('detail').innerHTML='<b>'+esc(selected.city||'')+'</b> • '+esc(selected.category)+' • Prioritas '+esc(selected.grade)+'<br>WhatsApp: '+esc(selected.phone);$('status').value=s.status||'Belum dihubungi'}
 function newCustomer(){$('title').textContent='Pilih Customer';$('detail').textContent='Pilih customer dari daftar.';$('status').value='Belum dihubungi'}
