@@ -26,3 +26,5 @@
 
 .followCard{margin-top:0}.followList{display:grid;gap:7px}.followItem{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px;background:#f8fafc;border:1px solid #e1e7ef;border-radius:10px}.followItem span,.followItem small{display:block;color:#667085;font-size:12px;margin-top:2px}.followItem button{padding:7px 12px;flex:0 0 auto}
 @media(max-width:600px){.followItem{align-items:flex-start}.followItem button{padding:8px 14px}}
+
+.alertBar{margin-top:10px;padding:10px 12px;border-radius:10px;background:#fff3cd;border:1px solid #f0d98a;color:#7a5a00;font-weight:700;font-size:13px}
