@@ -190,3 +190,21 @@ tbody tr:hover{background:#eaf3ff}
 @media(max-width:380px){
   .filters{grid-template-columns:1fr}
 }
+
+
+/* Follow-up and activity polish */
+.followCard h2{margin:0 0 9px;font-size:16px}
+.followItem{border-radius:11px;background:#fff;box-shadow:0 1px 5px #00000008}
+.followItem small{font-weight:700}
+.followItem button{min-width:58px}
+.followItem.followToday{border-left:4px solid #d6a900}
+.followItem.followLate{border-left:4px solid #c94b4b}
+.followItem.followNormal{border-left:4px solid #0b3a75}
+.activityCard h2{margin-bottom:9px}
+@media(max-width:600px){
+  .followItem{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px}
+  .followItem b{font-size:13px}
+  .followItem span{font-size:11px}
+  .followItem small{font-size:10px}
+  .followItem button{min-height:38px}
+}
