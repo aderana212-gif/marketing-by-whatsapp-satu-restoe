@@ -1,5 +1,6 @@
-const SUPABASE_URL='https://xgidnneeovsqfysleeua.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY='sb_publishable_bcLO52pj7tmWEHBPxziSH_ElYtHWM0';
+const SUPABASE_URL=window.__SUPABASE_CONFIG__?.url||'';
+const SUPABASE_PUBLISHABLE_KEY=window.__SUPABASE_CONFIG__?.publishableKey||'';
+if(!SUPABASE_URL||!SUPABASE_PUBLISHABLE_KEY){throw new Error('Konfigurasi Supabase belum tersedia.');}
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const CATS={travel:'🧳 Travel',bus:'🚌 Bus',eo:'🎪 EO/MICE',corp:'🏢 Corporate',wedding:'💍 Wedding',community:'👥 Community'};
 const STATUSES=['Belum dihubungi','Sudah dihubungi','Follow Up','Respon','Deal'];
