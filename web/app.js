@@ -50,7 +50,7 @@ function importedRow(r){
 async function importBackupFile(file){
   if(!session){$('appMsg').textContent='Login dulu untuk import backup.';return}
   const text=await file.text();let rows=[];
-  if(file.name.toLowerCase().endsWith('.json')){let payload;try{payload=JSON.parse(text)}catch{$('appMsg').textContent='File JSON tidak valid.';return}rows=(payload.contacts||[]).map(x=>{const c=x.contact||{},s=x.status||{};return {phone:c.phone||x.phone,status:s.status||'Belum dihubungi',marketing:s.marketing||'',last_contact:s.last_contact||'',next_follow:s.next_follow||'',notes:s.notes||'',history:Array.isArray(s.history)?s.history:[]}})}
+  if(file.name.toLowerCase().endsWith('.json')){let payload;try{payload=JSON.parse(text)}catch{$('appMsg').textContent='File JSON tidak valid.';return}rows=(payload.contacts||[]).filter(x=>x.status&&x.status.status).map(x=>{const c=x.contact||{},s=x.status;return {phone:c.phone||x.phone,status:s.status,marketing:s.marketing||'',last_contact:s.last_contact||'',next_follow:s.next_follow||'',notes:s.notes||'',history:Array.isArray(s.history)?s.history:[]}})}
   else rows=parseCSV(text).map(importedRow).filter(Boolean);
   if(!rows.length){$('appMsg').textContent='Tidak ada baris backup yang bisa diimport.';return}
   const byPhone=new Map(contacts.map(c=>[norm(c.phone),c]));let matched=0,skipped=0,changed=0;
