@@ -65,7 +65,7 @@ async function importBackupFile(file){
 }
 async function login(){const email=$('email').value.trim();if(!email)return;$('loginMsg').textContent='Mengirim link...';const {error}=await db.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});$('loginMsg').textContent=error?error.message:'Link login sudah dikirim ke email.'}
 async function logout(){await db.auth.signOut()}
-$('todayBtn').onclick=()=>filterFollow('today');$('overdueBtn').onclick=()=>filterFollow('overdue');$('resetViewBtn').onclick=resetView;$('clearSearch').onclick=()=>{$('search').value='';render()};
+$('todayBtn').onclick=()=>filterFollow('today');$('overdueBtn').onclick=()=>filterFollow('overdue');$('resetViewBtn').onclick=resetView;$('clearSearch').onclick=()=>{$('search').value='';render()};$('priorityBtn').onclick=()=>{statusFilter.value='Belum dihubungi';gradeFilter.value='A';search.value='';render();updateDashboard()};
 $('search').oninput=render;$('statusFilter').onchange=render;$('gradeFilter').onchange=render;$('saveBtn').onclick=saveStatus;$('waBtn').onclick=openWA;$('exportBtn').onclick=exportCSV;$('backupBtn').onclick=backupJSON;$('importFile').onchange=e=>{const f=e.target.files?.[0];if(f)importBackupFile(f);e.target.value=''};$('sendOtp').onclick=login;$('loginBtn').onclick=()=>$('loginCard').classList.toggle('hidden');$('logoutBtn').onclick=logout;
 db.auth.onAuthStateChange(async(_event,s)=>{session=s;$('loginBtn').classList.toggle('hidden',!!s);$('logoutBtn').classList.toggle('hidden',!s);$('loginCard').classList.toggle('hidden',!!s);statuses=new Map();await load()});
 load();
