@@ -3,16 +3,18 @@ const SUPABASE_PUBLISHABLE_KEY='sb_publishable_bcLO52pj7tmWEHBPxziSH_ElYtHWM0';
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const CATS={travel:'🧳 Travel',bus:'🚌 Bus',eo:'🎪 EO/MICE',corp:'🏢 Corporate',wedding:'💍 Wedding',community:'👥 Community'};
 const STATUSES=['Belum dihubungi','Sudah dihubungi','Follow Up','Respon','Deal'];
-let contacts=[],statuses=new Map(),currentCat='travel',selected=null,session=null;
+let contacts=[],statuses=new Map(),templates=new Map(),currentCat='travel',selected=null,session=null;
 const $=id=>document.getElementById(id);
 const norm=p=>String(p||'').replace(/\D/g,'').replace(/^0/,'62');
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function localDT(v){return v?new Date(v).toISOString().slice(0,16):''}
-function msg(c){return 'Assalamu’alaikum Bapak/Ibu '+(c?.name||'')+' 🙏\n\nPerkenalkan, kami dari SATU RESTOE Pangandaran.\n\nKami membuka kerja sama untuk kebutuhan rombongan di Pangandaran. 🍽️🌴\n\nBoleh kami kirimkan menu & paket Satu Restoe?\n\nTerima kasih 🙏\nSATU RESTOE PANGANDARAN\nWA 0812-2011-1178'}
+function msg(c){const t=templates.get(c?.category);if(t){return t.replaceAll('[NAMA]',c?.name||'').replaceAll('\\\\n','\n')}return 'Assalamu’alaikum Bapak/Ibu '+(c?.name||'')+' 🙏\n\nPerkenalkan, kami dari SATU RESTOE Pangandaran.\n\nKami membuka kerja sama untuk kebutuhan rombongan di Pangandaran. 🍽️🌴\n\nBoleh kami kirimkan menu & paket Satu Restoe?\n\nTerima kasih 🙏\nSATU RESTOE PANGANDARAN\nWA 0812-2011-1178'}
 async function load(){
   const {data,error}=await db.from('marketing_contacts').select('id,name,city,phone,category,grade,active,notes,updated_at').eq('active',true).order('id');
   if(error){$('appMsg').textContent='Gagal mengambil kontak: '+error.message;return}
   contacts=data||[];
+  const {data:t,error:te}=await db.from('marketing_templates').select('category,template').eq('active',true);
+  if(!te) templates=new Map((t||[]).map(x=>[x.category,x.template]));
   if(session){const {data:s,error:e}=await db.from('marketing_contact_status').select('*');if(!e)(s||[]).forEach(x=>statuses.set(x.contact_id,x))}
   renderCats();render();newCustomer();
 }
