@@ -7,13 +7,8 @@
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header><div class="wrap"><div><h1>MARKETING BY WHATSAPP — SATU RESTOE</h1><p>Data customer cloud • Status tersimpan di cloud • Bisa dibuka dari HP/PC</p></div><button id="loginBtn" class="light">Login</button></div></header>
+<header><div class="wrap"><div><h1>MARKETING BY WHATSAPP — SATU RESTOE</h1><p>Data customer cloud • Status tersimpan di cloud • Bisa dibuka dari HP/PC</p></div></div></header>
 <main class="wrap">
-<section id="loginCard" class="card hidden">
-<h2>Login Marketing</h2><p>Masukkan email untuk menerima magic link.</p>
-<div class="row"><input id="email" type="email" placeholder="Email"></div>
-<button id="sendOtp" class="blue">Kirim Link Login</button><div id="loginMsg" class="muted"></div>
-</section>
 <section class="card">
 <div class="stats"><div><span>Total</span><b id="total">0</b></div><div><span>Belum Dihubungi</span><b id="new">0</b></div><div><span>Follow Up</span><b id="follow">0</b></div><div><span>Respon/Deal</span><b id="resp">0</b></div></div>
 <div id="alertBar" class="alertBar hidden"></div>
@@ -26,7 +21,7 @@
 <div class="dashActions"><button id="todayBtn" class="gray">Tampilkan Follow Up Hari Ini</button><button id="overdueBtn" class="gray">Tampilkan Terlambat</button><button id="priorityBtn" class="blue">🎯 A + Belum Dihubungi</button><button id="resetViewBtn" class="gray">Reset Filter</button></div>
 </section>
 <section class="card">
-<div class="toolbar"><div class="cats" id="cats"></div><button id="logoutBtn" class="gray hidden">Logout</button></div>
+<div class="toolbar"><div class="cats" id="cats"></div></div>
 <div class="searchRow"><input id="search" placeholder="Cari nama, kota, WhatsApp..." autocomplete="off"><button id="clearSearch" class="gray" type="button">Clear</button></div>
 <div class="filters"><select id="statusFilter"><option value="">Semua Status</option><option>Belum dihubungi</option><option>Sudah dihubungi</option><option>Follow Up</option><option>Respon</option><option>Deal</option></select><select id="gradeFilter"><option value="">Semua Prioritas</option><option>A</option><option>B</option></select></div>
 <div class="bulkBar"><label><input id="selectAll" type="checkbox"> Pilih semua yang tampil</label><span id="selectedCount">0 dipilih</span><button id="waSelectedBtn" class="green" type="button">WA Berikutnya</button></div><div class="table"><table><thead><tr><th>✓</th><th>No</th><th>P</th><th>Nama</th><th>Kota</th><th>WA</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div>
