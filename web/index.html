@@ -34,15 +34,15 @@
 <section class="card followCard"><h2>📅 Daftar Follow Up</h2><div id="followList" class="followList">Belum ada follow-up.</div></section>
 <section class="card"><h2>🕘 Aktivitas Terakhir</h2><div id="recentActivity" class="followList">Belum ada aktivitas.</div></section>
 <section class="grid">
-<section class="card"><h2 id="title">Pilih Customer</h2><div id="detail" class="muted">Pilih customer dari daftar.</div></section>
-<section class="card" id="editor">
+<section class="card editorCard"><h2 id="title">Pilih Customer</h2><div id="detail" class="muted detailBox">Pilih customer dari daftar.</div></section>
+<section class="card editorCard" id="editor">
 <label>Status</label><select id="status"><option>Belum dihubungi</option><option>Sudah dihubungi</option><option>Follow Up</option><option>Respon</option><option>Deal</option></select>
 <div class="quick"><span>Status cepat:</span><button type="button" onclick="quickStatus('Sudah dihubungi')">Dihubungi</button><button type="button" onclick="quickStatus('Follow Up')">Follow Up</button><button type="button" onclick="quickStatus('Respon')">Respon</button><button type="button" onclick="quickStatus('Deal')">Deal</button></div>
 <label>Marketing</label><input id="marketing">
 <label>Terakhir Dihubungi</label><input id="lastContact" type="datetime-local">
 <label>Jadwal Follow Up</label><input id="nextFollow" type="datetime-local">
 <label>Catatan</label><textarea id="notes"></textarea>
-<div class="row"><button class="blue" id="saveBtn">Simpan Status</button><button class="green" id="waBtn">WA Business</button><button class="blue" id="saveWaBtn">💾 Simpan & WA</button><button class="gray" id="previewBtn" type="button">👁️ Preview Pesan</button><button class="gray" id="copyMsgBtn" type="button">📋 Copy Pesan</button></div><pre id="messagePreview" class="messagePreview hidden"></pre>
+<div class="row editorActions"><button class="green primaryAction" id="saveWaBtn">💾 Simpan & WA</button><button class="blue secondaryAction" id="saveBtn">Simpan Status</button><button class="green secondaryAction" id="waBtn">WA Business</button><button class="gray secondaryAction" id="previewBtn" type="button">👁️ Preview Pesan</button><button class="gray secondaryAction" id="copyMsgBtn" type="button">📋 Copy Pesan</button></div><pre id="messagePreview" class="messagePreview hidden"></pre>
 <h3>Riwayat Kontak</h3><div id="history" class="history">Belum ada riwayat.</div>
 </section>
 </section>
