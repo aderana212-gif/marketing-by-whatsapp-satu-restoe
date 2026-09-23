@@ -11,4 +11,4 @@ if (!url || !key) {
 const out = path.join(process.cwd(), 'web', 'config.js');
 const content = 'window.__SUPABASE_CONFIG__=' + JSON.stringify({ url, publishableKey: key }) + ';\n';
 fs.writeFileSync(out, content, 'utf8');
-console.log('Generated web/config.js');
+console.log('Generated web/config.js'); // Cloudflare Git integration build trigger test
