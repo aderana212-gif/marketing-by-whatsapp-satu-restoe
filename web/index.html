@@ -35,7 +35,10 @@
 <h3>Riwayat Kontak</h3><div id="history" class="history">Belum ada riwayat.</div>
 </section>
 </section>
-<section class="card"><h3>Backup</h3><p>Export CSV di web ini mengambil data kontak + status cloud. Import backup akan kita tambahkan setelah data lama dari APK berhasil diamankan.</p><button id="exportBtn" class="gray">Export CSV</button><span id="appMsg" class="muted"></span></section>
+<section class="card"><h3>Backup & Migrasi</h3><p>Backup JSON menyimpan kontak, status, catatan, dan seluruh riwayat cloud. CSV dapat dipakai untuk migrasi data lama; pencocokan customer menggunakan nomor WhatsApp.</p>
+<div class="row"><button id="exportBtn" class="gray">Export CSV</button><button id="backupBtn" class="gray">Backup JSON</button><label class="fileBtn gray">Import CSV/Backup <input id="importFile" type="file" accept=".csv,text/csv,.json,application/json" hidden></label></div>
+<span id="appMsg" class="muted"></span>
+</section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./app.js"></script>
