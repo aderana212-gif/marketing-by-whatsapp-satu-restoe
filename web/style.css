@@ -36,3 +36,55 @@
 .messagePreview{user-select:text}
 
 .statusBadge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;line-height:1.1;border:1px solid #d8dee8;background:#f3f5f8}.status-sudah-dihubungi{background:#e8f0ff}.status-belum-dihubungi{background:#f3f5f8}.status-follow-up{background:#fff4d6}.status-respon{background:#e8f7ee}.status-deal{background:#dff7e8}@media(max-width:600px){.statusBadge{padding:3px 7px;font-size:10px}}
+/* Mobile-first polish */
+html{scroll-behavior:smooth}
+body{min-width:320px;-webkit-text-size-adjust:100%}
+header{position:sticky;top:0;z-index:20;box-shadow:0 2px 12px #0002}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
+header .wrap>div{min-width:0}
+header .wrap h1{letter-spacing:.2px}
+header .wrap p{opacity:.9}
+.card{border:1px solid #e3e8ef;box-shadow:0 3px 14px #0000000d}
+.stats>div,.dashboard>div{transition:transform .15s,box-shadow .15s}
+.stats>div:hover,.dashboard>div:hover{transform:translateY(-1px);box-shadow:0 3px 10px #0001}
+input:focus,select:focus,textarea:focus{outline:2px solid #9fc2ee;outline-offset:0;border-color:#0b3a75}
+button{min-height:40px;transition:transform .1s,opacity .1s}
+button:active{transform:scale(.98)}
+.cats button.active{box-shadow:0 2px 7px #0b3a7526}
+.table{border:1px solid #e1e7ef;border-radius:10px}
+table{min-width:650px}
+th{z-index:2}
+tbody tr:nth-child(even){background:#fafbfd}
+tbody tr:hover{background:#eaf3ff}
+.bulkBar{background:#f7f9fc;border:1px solid #e1e7ef;border-radius:10px;padding:8px}
+@media(max-width:600px){
+  .wrap{padding:0 10px}
+  header .wrap{align-items:flex-start}
+  header .light{min-width:72px;padding:8px 10px}
+  .card{border-radius:12px;padding:10px}
+  .stats{gap:6px}
+  .stats>div{min-height:62px}
+  .stats span,.dashboard span{font-size:11px}
+  .stats b{font-size:18px}
+  .dashboard{gap:6px}
+  .dashboard>div{padding:8px;min-height:58px}
+  .dashboard b{font-size:17px}
+  .dashActions{gap:6px}
+  .dashActions button{min-height:42px}
+  .searchRow{position:sticky;top:62px;z-index:10;background:#fff;padding-top:2px}
+  .searchRow input{min-width:0}
+  .filters{gap:6px}
+  .cats{scrollbar-width:none}
+  .cats::-webkit-scrollbar{display:none}
+  .cats button{padding:9px 11px;min-height:38px}
+  .table{max-height:48vh}
+  th,td{padding:8px 6px}
+  .followItem{padding:8px}
+  .followItem>div{min-width:0}
+  .followItem b,.followItem span,.followItem small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:230px}
+  .row{gap:6px}
+  textarea{min-height:88px}
+  .quick{gap:5px}
+  .quick button{min-height:36px}
+}
+@media(min-width:601px){.searchRow{max-width:760px}.table{max-height:560px}}
