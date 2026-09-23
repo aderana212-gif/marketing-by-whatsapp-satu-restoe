@@ -16,3 +16,5 @@ Aplikasi Android untuk marketing travel/customer Satu Restoe Pangandaran.
 Package: `com.saturestoe.marketing`
 
 APK debug dibangun otomatis melalui GitHub Actions setelah source project lengkap.
+
+<!-- Cloudflare Git integration test: 2026-09-23 -->
