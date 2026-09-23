@@ -141,3 +141,23 @@ tbody tr:hover{background:#eaf3ff}
   .editorActions .primaryAction{grid-column:1 / -1}
   .history{max-height:220px;overflow:auto}
 }
+
+
+/* Dashboard visual cards */
+.stats>div,.dashboard>div{position:relative;overflow:hidden}
+.stats>div::before,.dashboard>div::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#0b3a75;border-radius:4px 0 0 4px}
+.stats>div:nth-child(2)::before{background:#98a2b3}
+.stats>div:nth-child(3)::before{background:#d6a900}
+.stats>div:nth-child(4)::before{background:#25a65a}
+.dashboard>div:nth-child(1)::before{background:#d6a900}
+.dashboard>div:nth-child(2)::before{background:#c94b4b}
+.dashboard>div:nth-child(3)::before{background:#0b3a75}
+.dashboard>div:nth-child(4)::before{background:#25a65a}
+.stats>div span,.dashboard>div span{padding-left:3px}
+.stats>div b,.dashboard>div b{display:block;margin-top:3px;padding-left:3px}
+.dashboard>div{background:#fff}
+@media(max-width:600px){
+  .stats>div::before,.dashboard>div::before{width:3px}
+  .stats>div{min-height:66px}
+  .dashboard>div{min-height:62px}
+}
