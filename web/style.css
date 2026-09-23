@@ -118,3 +118,26 @@ tbody tr:hover{background:#eaf3ff}
   .table tbody td:nth-child(7){grid-column:3;grid-row:1;justify-self:end}
   .table tbody td input.contactCheck{width:18px;height:18px;margin:0}
 }
+
+
+/* Customer editor mobile polish */
+.editorActions{display:grid!important;grid-template-columns:1fr 1fr;gap:7px!important;margin-top:8px}
+.editorActions button{width:100%}
+.editorActions .primaryAction{grid-column:1 / -1;min-height:48px;font-size:15px;box-shadow:0 3px 10px #25d36633}
+.editorActions .secondaryAction{min-height:44px}
+.detailBox{margin-top:8px;padding:10px 12px;background:#f8fafc;border:1px solid #e1e7ef;border-radius:10px}
+.editorCard h2{margin:0 0 4px}
+.editorCard label{font-size:12px;font-weight:700;color:#475467}
+.editorCard h3{font-size:14px;margin:14px 0 7px}
+@media(max-width:600px){
+  .editorCard{position:relative}
+  .editorCard h2{font-size:18px}
+  .editorCard .quick{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}
+  .editorCard .quick span{flex:0 0 auto}
+  .editorCard .quick button{flex:0 0 auto}
+  .editorCard input,.editorCard select,.editorCard textarea{font-size:16px}
+  .editorCard textarea{min-height:105px}
+  .editorActions{position:sticky;bottom:0;background:#fff;padding:8px 0 2px;z-index:8}
+  .editorActions .primaryAction{grid-column:1 / -1}
+  .history{max-height:220px;overflow:auto}
+}
